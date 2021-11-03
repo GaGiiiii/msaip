@@ -15,6 +15,7 @@ class CreateSavedCarsTable extends Migration {
       $table->id();
       $table->bigInteger('user_id');
       $table->bigInteger('type_id');
+      $table->unique(['user_id', 'type_id']);
       $table->timestamps();
     });
   }

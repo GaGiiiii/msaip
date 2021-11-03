@@ -13,7 +13,7 @@ class Type extends Model {
     'make_id',
   ];
 
-  public function model() {
+  public function mModel() {
     return $this->belongsTo(MModel::class);
   }
 

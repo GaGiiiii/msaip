@@ -15,6 +15,7 @@ class CreateTypesTable extends Migration {
       $table->id();
       $table->bigInteger('make_id');
       $table->bigInteger('m_model_id');
+      $table->unique(['m_model_id', 'make_id']);
       $table->timestamps();
     });
   }
