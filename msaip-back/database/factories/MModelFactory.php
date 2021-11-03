@@ -14,7 +14,7 @@ class MModelFactory extends Factory {
   public function definition() {
     return [
       'name' => $this->faker->name(),
-      'manufacturer_id' => Manufacturer::class,
+      'manufacturer_id' => Manufacturer::factory(),
     ];
   }
 }

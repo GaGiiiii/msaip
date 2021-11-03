@@ -14,8 +14,8 @@ class SavedCarFactory extends Factory {
    */
   public function definition() {
     return [
-      'user_id' => User::class,
-      'type_id' => Type::class,
+      'user_id' => User::factory(),
+      'type_id' => Type::factory(),
     ];
   }
 }

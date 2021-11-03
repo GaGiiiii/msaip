@@ -14,8 +14,8 @@ class TypeFactory extends Factory {
    */
   public function definition() {
     return [
-      'm_model_id' => MModel::class,
-      'make_id' => Make::class,
+      'm_model_id' => MModel::factory(),
+      'make_id' => Make::factory(),
     ];
   }
 }
