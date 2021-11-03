@@ -52,4 +52,4 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   Route::post('/saved-cars', [SavedCarController::class, 'store']);
   Route::delete('/saved-cars/{car}', [SavedCarController::class, 'destroy']);
 });
-// PROTECTED ======================================================================================
+// PROTECTED =====================================================================================
