@@ -4,6 +4,7 @@ use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MModelController;
 use App\Http\Controllers\SavedCarController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
