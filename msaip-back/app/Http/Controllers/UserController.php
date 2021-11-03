@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 
 class UserController extends Controller {
@@ -21,37 +22,44 @@ class UserController extends Controller {
   }
 
   public function login(Request $request) {
-    // VALIDATE DATA
-    $validator = Validator::make($request->all(), [
-      'email' => 'required|email',
-      'password' => 'required|string',
-    ]);
+    try {
+      // VALIDATE DATA
+      $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required|string',
+      ]);
 
-    if ($validator->fails()) {
+      if ($validator->fails()) {
+        return response([
+          'user' => null,
+          'message' => 'Validation failed.',
+          'errors' => $validator->messages(),
+        ], 400);
+      }
+
+      $user = User::where('email', $request->email)->first();
+
+      if (!$user || !Hash::check($request->password, $user->password)) {
+        return response([
+          "user" => null,
+          "message" => "Login failed.",
+        ], 401);
+      }
+
+      $token = $user->createToken('usertoken');
+      $user = $user->fresh(['savedCars']);
+
       return response([
-        'user' => null,
-        'message' => 'Validation failed.',
-        'errors' => $validator->messages(),
-      ], 400);
-    }
-
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user || !Hash::check($request->password, $user->password)) {
+        "user" => $user,
+        "message" => "Login successful",
+        'token' => $token->plainTextToken,
+      ], 200);
+    } catch (Exception $e) {
       return response([
         "user" => null,
-        "message" => "Login failed.",
-      ], 401);
+        "message" => $e->getMessage(),
+      ], 500);
     }
-
-    $token = $user->createToken('usertoken');
-    $user = $user->fresh(['savedCars']);
-
-    return response([
-      "user" => $user,
-      "message" => "Login successful",
-      'token' => $token->plainTextToken,
-    ], 200);
   }
 
   public function logout(Request $request) {
