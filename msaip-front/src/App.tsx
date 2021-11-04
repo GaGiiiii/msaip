@@ -9,9 +9,9 @@ import Home from './components/Home/Home';
 
 export interface User {
   id: number,
-  username: String,
-  email: String,
-  token: String
+  username: string,
+  email: string,
+  token: string
 }
 
 interface CurrentUserContextTypes {
@@ -20,7 +20,7 @@ interface CurrentUserContextTypes {
 }
 
 const api = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? "http://localhost:8000/api" : 'PRODUCTION_URL';
-export const ApiContext = React.createContext<String>(api);
+export const ApiContext = React.createContext<string>(api);
 export const CurrentUserContext = React.createContext<CurrentUserContextTypes>({ currentUser: null, setCurrentUser: null });
 
 function App() {

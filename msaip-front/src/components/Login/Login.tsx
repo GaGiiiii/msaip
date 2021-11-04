@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { Col, Container, Row, Button, Form } from 'react-bootstrap'
 import axios from 'axios';
 import './login.css';
@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const api = useContext(ApiContext);
   const { setCurrentUser } = useContext(CurrentUserContext);
 
-  function handleLogin(event: React.FormEvent) {
+  const handleLogin = useCallback((event: React.FormEvent) => {
     event.preventDefault();
 
     if (email === '' || password === "") {
@@ -38,7 +38,8 @@ const Login: React.FC = () => {
       console.log(error);
       setWrongCombination(true);
     });
-  }
+  }, [api, email, password, navigate, setCurrentUser]);
+
 
   return (
     <Container fluid className='px0 login-container mt-5' style={{ overflowX: 'hidden' }}>

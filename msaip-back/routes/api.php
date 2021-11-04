@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Route;
 // Auth ==========================================================================================
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::get('/loggedIn', [UserController::class, 'loggedIn']);
 // Auth ==========================================================================================
 
 // Manufacturers =================================================================================
@@ -47,6 +46,7 @@ Route::get('/saved-cars', [SavedCarController::class, 'index']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
   // Auth
   Route::post('/logout', [UserController::class, 'logout']);
+  Route::get('/loggedIn', [UserController::class, 'loggedIn']);
 
   // Likes
   Route::post('/saved-cars', [SavedCarController::class, 'store']);

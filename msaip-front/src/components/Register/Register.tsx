@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { Col, Container, Row, Button, Form } from 'react-bootstrap'
 import axios from 'axios';
 import './register.css';
@@ -17,7 +17,7 @@ const Register: React.FC = () => {
   const api = useContext(ApiContext);
   const { setCurrentUser } = useContext(CurrentUserContext);
 
-  function handleRegister(event: React.FormEvent) {
+  const handleRegister = useCallback((event: React.FormEvent) => {
     event.preventDefault();
 
     if (email === '' || password === "" || username === "") {
@@ -38,7 +38,7 @@ const Register: React.FC = () => {
     }).catch((error) => {
       console.log(error);
     });
-  }
+  }, [email, password, navigate, username, setCurrentUser, api]);
 
   return (
     <Container fluid className='px0 login-container mt-5' style={{ overflowX: 'hidden' }}>

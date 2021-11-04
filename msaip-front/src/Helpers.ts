@@ -1,6 +1,5 @@
 import { User } from "./App";
-
-
+import axios from "axios";
 
 export function validateEmail(email: String): boolean {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -23,11 +22,17 @@ export function isLoggedIn(api: String): User | null {
     token: parsedUser.token,
   }
 
-  return user || null;
+  return user;
 }
 
-export function logout() {
-  localStorage.removeItem("user");
+export function logout(api: string, user: User | null): void {
+  axios.post(`${api}/logout`, {}, { headers: { Authorization: `Bearer ${user!.token}` } }).then(res => {
+    localStorage.removeItem("user");
+  }).catch(error => {
+    console.log(error.response.data);
+    console.log(error.response.status);
+    console.log(error.response.headers);
+  });
 }
 
 export function login(user: User) {
