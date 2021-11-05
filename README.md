@@ -84,12 +84,12 @@ php artisan test
 ### Relation Model:  
 
 ---  
-User(**id**, first_name, last_name, image, email, email_verified_at, password, remember_token, created_at, updated_at)  
-Category(**id**, name, created_at, updated_at)  
-Post(**id**, *user_id*, *category_id*, title, body, created_at, updated_at)  
-Like(**id**, ***post_id, user_id***, created_at, updated_at)  
-Comment(**id**, ***post_id, user_id***, body, created_at, updated_at)  
-Interest(**id**, ***user_id, category_id***, created_at, updated_at)
+User(**id**, username, email, email_verified_at, password, remember_token, created_at, updated_at)  
+Manufacturer(**id**, name, created_at, updated_at)  
+M_Model(**id**, *manufacturer_id*, name, created_at, updated_at)  
+Type(**id**, ***m_model_id, make_id***, created_at, updated_at)  
+Make(**id**, name, created_at, updated_at)  
+Saved_Car(**id**, ***user_id, type_id***, created_at, updated_at)
 
 ---
 
