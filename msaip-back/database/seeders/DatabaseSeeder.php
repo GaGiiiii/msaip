@@ -31,9 +31,11 @@ class DatabaseSeeder extends Seeder {
     $mmodels = MModel::all();
 
     // Create 20 types based on existing makes and models
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < sizeof($mmodels); $i++) {
       try {
-        Type::factory()->for($makes[rand(0, sizeof($makes) - 1)])->for($mmodels[rand(0, sizeof($mmodels) - 1)])->create();
+        for ($j = 0; $j < rand(1, 5); $j++) {
+          Type::factory()->for($makes[rand(0, sizeof($makes) - 1)])->for($mmodels[$i])->create();
+        }
       } catch (Exception $e) {
         continue;
       }
