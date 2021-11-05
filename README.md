@@ -97,7 +97,7 @@ Saved_Car(**id**, ***user_id, type_id***, created_at, updated_at)
 
 ---
 
-### AUTH
+### Auth
 
 --- 
 
@@ -109,13 +109,10 @@ POST /api/register
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `first_name` | `string` | **Required** Provided first name. |
-| `last_name` | `string` | **Required** Provided last name. |
-| `email` | `string` | **Required** Provided email. |
-| `password` | `string \| min 4 chars` | **Required** Provided password. |
-| `password_confirmation` | `string` | **Required** Confirmed password. |
-| `image` | `file \| image \| max 5mb ` | **Required** Users profile picture. |
-| `interests` | `string` | In format: **1,3,5**. Where 1,3,5 are **ID's** of categories. |
+| `username` | `string` | **Required** Users username. |
+| `email` | `string` | **Required** Users email. |
+| `password` | `string \| min 4 chars` | **Required** Users password. |
+| `password_confirmation` | `string` | **Required** Users confirmed password. |
 
 #### Login
 
@@ -125,8 +122,8 @@ POST /api/login
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `email` | `string` | **Required** Provided email. |
-| `password` | `string \| min 4 chars` | **Required** Provided password. |
+| `email` | `string` | **Required** Users email. |
+| `password` | `string \| min 4 chars` | **Required** Users password. |
 
 #### Logout
 
@@ -140,162 +137,83 @@ POST /api/logout
 
 ---
 
-### POSTS
+### Manufacturers
 
 ---
 
-#### Get all posts
+#### Get all manufacturers
 
 ```http
-GET /api/posts
+GET /api/manufacturers
 ```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `sortBy` | `string` | **Optional** Available options **dateDesc \| dateAsc \| popularity** |
-| `categories` | `string` | **Optional** In format: **1,3,5** where 1,3,5 are **ID's** of categories |
-| `search` | `string` | **Optional** First name / Last name of user who created post |
-
-#### Add new post
-
-```http
-POST /api/posts
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `category_id` | `integer` | **Required** ID of category to which post belongs to. |
-| `title` | `string \| min 10, max 100 chars` | **Required**. Title of the post. |
-| `body` | `string \| min 10 \| max 10000 chars` | **Required** (if no image / video provided). |
-| `image` | `file \| image \| max 5mb` | **Required** (if no body / video provided). |
-| `video` | `file \| video \| max 20mb` | **Required** (if no body / image provided). |
-| `token` | `string` | **Required** Users token. |
-
-#### Update post
-
-```http
-PUT /api/posts/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id` | `integer` | **Required** ID of post intended to update. |
-| `category_id` | `integer` | **Required** ID of category to which post belongs to. |
-| `title` | `string \| min 10, max 100 chars` | **Required** Title of the post. |
-| `body` | `string \| min 10 \| max 10000 chars` | **Required** (if no image / video provided). |
-| `image` | `file \| image \| max 5mb` | **Required** (if no body / video provided). |
-| `video` | `file \| video \| max 20mb` | **Required** (if no body / image provided). |
-| `token` | `string` | **Required** Users token. |
-
-#### Delete post
-
-```http
-DELETE /api/posts/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id` | `integer` | **Required** ID of post intended to delete. |
-| `token` | `string` | **Required** Users token. |
 
 ---
 
-### Comments
+### Models
 
 ---
 
-#### Get all comments
+#### Get all models
 
 ```http
-GET /api/comments
-```
-
-#### Add new comment
-
-```http
-POST /api/comments
+GET /api/models
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `post_id` | `integer` | **Required** ID of post to which comments belongs to. |
-| `body` | `string \| min 20 \| max 5000 chars` | **Required** |
-| `token` | `string` | **Required** Users token. |
+| `manufacturer` | `integer` | **Optional** ID of manufacturer to which model belongs to. |
 
-#### Update comment
-
-```http
-PUT /api/comments/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id` | `integer` | **Required** ID of comment intended to update. |
-| `post_id` | `integer` | **Required** Id of post to which comments belongs to. |
-| `body` | `string \| min 20 \| max 5000 chars` | **Required** |
-| `token` | `string` | **Required** Users token. |
-
-#### Delete comment
-
-```http
-DELETE /api/comments/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id` | `integer` | **Required** ID of comment intended to delete. |
-| `token` | `string` | **Required** Users token. |
+### Types
 
 ---
 
-### Likes
+#### Get all types
+
+```http
+GET /api/types
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `model` | `integer` | **Optional** ID of model to which type belongs to. |
+
+### Saved cars
 
 ---
 
-#### Add new like
+#### Get all saved cars
 
 ```http
-POST /api/likes
+GET /api/saved-cars
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `post_id` | `integer` | **Required** ID of post to which like belongs to. |
+| `user` | `integer` | **Optional** ID of user to which car belongs to. |
+| `type` | `integer` | **Optional** ID of type to which car belongs to. |
+
+
+#### Add new saved car
+
+```http
+POST /api/saved-cars
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `type_id` | `integer` | **Required** ID of type to which saved car belongs to. |
 | `token` | `string` | **Required** Users token. |
 
-#### Delete like
+#### Delete saved car
 
 ```http
-DELETE /api/likes/${id}
+DELETE /api/saved-cars/${id}
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `id` | `integer` | **Required** ID of like intended to delete. |
+| `id` | `integer` | **Required** ID of saved car intended to delete. |
 | `token` | `string` | **Required** Users token. |
-
----
-
-#### Most popular posts in category
-
-```http
-GET /api/categories/${id}/most-popular-posts
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id` | `integer` | **Required** ID of selected category. |
-
-#### Users points
-
-```http
-GET /api/users/${id}/points
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id` | `integer` | **Required** ID of selected user. |
-
 
 ## Responses
 
