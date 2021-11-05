@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\SavedCar;
+use App\Models\Type;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -81,6 +83,70 @@ class SavedCarTest extends TestCase {
       ->assertJson([
         "savedCars" => $foundSavedCars->toArray(),
         "message" => "Saved cars found",
+      ]);
+  }
+
+  public function test_save_car() {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    $type = Type::factory()->create();
+
+    $response = $this->postJson('/api/saved-cars', [
+      'type_id' => $type->id
+    ]);
+
+    $response->assertStatus(201);
+  }
+
+  public function test_save_car_unauthenticated() {
+    $type = Type::factory()->create();
+
+    $response = $this->postJson('/api/saved-cars', [
+      'type_id' => $type->id
+    ]);
+
+    $response
+      ->assertStatus(401)
+      ->assertJson([
+        'message' => 'Unauthenticated.'
+      ]);
+  }
+
+  public function test_save_car_no_type() {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    $type = Type::factory()->create();
+
+    $response = $this->postJson('/api/saved-cars', [
+      'type_id' => 22
+    ]);
+
+    $response
+      ->assertStatus(400)
+      ->assertJson([
+        'savedCar' => null,
+        'message' => 'Type not found.',
+      ]);
+  }
+
+  public function test_save_car_already_saved() {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    $type = Type::factory()->create();
+    SavedCar::factory()->create([
+      'user_id' => $user,
+      'type_id' => $type
+    ]);
+
+    $response = $this->postJson('/api/saved-cars', [
+      'type_id' => $type->id
+    ]);
+
+    $response
+      ->assertStatus(400)
+      ->assertJson([
+        "savedCar" => null,
+        "message" => 'Car already saved',
       ]);
   }
 }

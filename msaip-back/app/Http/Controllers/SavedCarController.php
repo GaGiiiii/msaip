@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SavedCar;
 use App\Models\Type;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -28,7 +29,7 @@ class SavedCarController extends Controller {
         $savedCars = SavedCar::all();
       }
 
-      $savedCars = $savedCars->fresh(['user', 'type']);
+      $savedCars = $savedCars->fresh(['user', 'type', 'type.mModel', 'type.make', 'type.mModel.manufacturer']);
 
       return response([
         "savedCars" => $savedCars,
@@ -97,6 +98,11 @@ class SavedCarController extends Controller {
         "savedCar" => $savedCar,
         "message" => "Saved car created.",
       ], 201);
+    } catch (QueryException $e) {
+      return response([
+        "savedCar" => null,
+        "message" => 'Car already saved',
+      ], 400);
     } catch (Exception $e) {
       return response([
         "savedCar" => null,
