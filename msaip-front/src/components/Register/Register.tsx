@@ -12,6 +12,7 @@ const Register: React.FC = () => {
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmedPassword, setConfirmedPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
 
   const api = useContext(ApiContext);
@@ -20,11 +21,11 @@ const Register: React.FC = () => {
   const handleRegister = useCallback((event: React.FormEvent) => {
     event.preventDefault();
 
-    if (email === '' || password === "" || username === "") {
+    if (email === '' || password === "" || username === "" || confirmedPassword === "") {
       return;
     }
 
-    axios.post(`${api}/register`, { email, password, username, }).then(response => {
+    axios.post(`${api}/register`, { email, password, username, password_confirmation: confirmedPassword }).then(response => {
       console.log(response);
       let user: User = {
         id: response.data.user.id,
@@ -38,7 +39,7 @@ const Register: React.FC = () => {
     }).catch((error) => {
       console.log(error);
     });
-  }, [email, password, navigate, username, setCurrentUser, api]);
+  }, [email, password, navigate, username, setCurrentUser, api, confirmedPassword]);
 
   return (
     <Container fluid className='px0 login-container mt-5' style={{ overflowX: 'hidden' }}>
@@ -50,6 +51,7 @@ const Register: React.FC = () => {
             <Input onChange={(e) => setUsername(e.target.value)} inputName='username' placeholder='GaGiiiii' type='text' validateInput={(inputValue) => inputValue.length > 3} />
             <Input onChange={(e) => setEmail(e.target.value)} inputName='email' placeholder='john@doe.com' type='email' validateInput={validateEmail} />
             <Input onChange={(e) => setPassword(e.target.value)} inputName='password' placeholder='123456' type='password' />
+            <Input onChange={(e) => setConfirmedPassword(e.target.value)} inputName='confirm password' type='password' validateInput={(inputValue) => inputValue === password} />
             <Button variant="primary" className='w-100' type="submit">
               Register
             </Button>

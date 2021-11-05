@@ -1,29 +1,30 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Card, Col, Container, Row, Button, Form } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ApiContext, CurrentUserContext } from '../../App';
-import { logout } from '../../Helpers';
 import './home.css';
 import axios from "axios";
+import Header from '../Header/Header';
 
-interface Manufacturer {
+export interface Manufacturer {
   id: number,
   name: string
 }
 
-interface Model {
+export interface Model {
   id: number,
   name: string,
   manufacturer: Manufacturer,
+  types?: Type[]
 }
 
-interface Type {
+export interface Type {
   id: number,
   make: Make,
   model: Model,
 }
 
-interface Make {
+export interface Make {
   id: number,
   name: string
 }
@@ -36,18 +37,12 @@ const Home: React.FC = () => {
   const [model, setModel] = useState<Model>();
 
   const [types, setTypes] = useState<Type[]>([]);
-  const [type, setType] = useState<Model>();
+  const [type, setType] = useState<Type>();
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const api = useContext(ApiContext);
-  const navigate = useNavigate();
-
-  const handleLogout = useCallback((event: React.FormEvent) => {
-    logout(api, currentUser);
-    setCurrentUser!(null);
-    navigate('/');
-  }, [api, currentUser, navigate, setCurrentUser]);
+  const { currentUser } = useContext(CurrentUserContext);
 
   const getManufacturers = useCallback(async () => {
     try {
@@ -74,17 +69,36 @@ const Home: React.FC = () => {
         let m: Model = {
           id: model.id,
           manufacturer,
-          name: model.name
+          name: model.name,
+          types: model.types
         }
         modelsG.push(m);
       });
       setModels(modelsG);
       setModel(modelsG[0]);
+      console.log(modelsG[0]);
+      setType(modelsG[0].types![0]);
     } catch (error) {
       console.log(error);
     }
   }, [api]);
 
+  const saveCar = useCallback(async (type: Type) => {
+    try {
+      await axios.post(`${api}/saved-cars`, { type_id: type.id }, {
+        headers: {
+          Authorization: `Bearer ${currentUser?.token}`
+        }
+      });
+      setErrorMessage('Car saved successfully');
+    } catch (error: any) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        console.log(error);
+      }
+    }
+  }, [api, currentUser]);
   const getTypes = useCallback(async (model: Model) => {
     try {
       let typesG: Type[] = [];
@@ -99,6 +113,7 @@ const Home: React.FC = () => {
         typesG.push(t);
       });
       setTypes(typesG);
+      setType(typesG[0]);
     } catch (error) {
       console.log(error);
     }
@@ -114,12 +129,21 @@ const Home: React.FC = () => {
     setModel(foundModel);
   }, [models]);
 
-  const handleSubmit = useCallback((e) => {
-    console.log("A");
+  const handleTypeChanged = useCallback((e) => {
+    let foundType = types.find((t: Type) => t.id === +e.target.value);
+    setType(foundType);
+  }, [types]);
 
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    console.log(manufacturer, model, type);
-  }, [manufacturer, model, type]);
+    if (!manufacturer || !model || !type) {
+      setErrorMessage("Please select all fields below");
+
+      return;
+    }
+
+    saveCar(type!);
+  }, [manufacturer, model, type, saveCar]);
 
   useEffect(() => {
     getManufacturers();
@@ -144,12 +168,13 @@ const Home: React.FC = () => {
     <Container fluid className='px0 login-container mt-5' style={{ overflowX: 'hidden' }}>
       <Row>
         <Col xl={{ span: 4, offset: 4 }} lg={{ span: 6, offset: 3 }} md={{ span: 8, offset: 2 }} sm={{ span: 10, offset: 1 }}>
-          <h3>Welcome: {currentUser!.username}</h3>
-          <Card className='shadow'>
-            <Card.Header as="h5" className='d-flex justify-content-between align-items-center'>Select your favorite car<span className='logout btn btn-outline-primary' onClick={handleLogout}>Logout</span>
+          <Header />
+          <Card className='shadow mb-5'>
+            <Card.Header as="h5" className='d-flex justify-content-between align-items-center'>Select your favorite car <Link to='/saved-cars'><span className='btn btn-outline-secondary'>My Cars</span></Link>
             </Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit}>
+                <div className='mb-2 text-danger'>{errorMessage}</div>
                 <div className="mb-3">
                   <Form.Label className="text-capitalize">Manufacturer</Form.Label>
                   <Form.Select aria-label="Default select example" onChange={handleManufacturerChanged}>
@@ -169,7 +194,7 @@ const Home: React.FC = () => {
                 </div>
                 <div className="mb-3">
                   <Form.Label className="text-capitalize">Make</Form.Label>
-                  <Form.Select aria-label="Default select example">
+                  <Form.Select aria-label="Default select example" onChange={handleTypeChanged}>
                     {types.map((type: Type) => (
                       <option value={type.id} key={type.id}>{type.make.name}</option>
                     ))}

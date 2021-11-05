@@ -1,0 +1,4 @@
+.car-li:hover {
+  cursor: pointer;
+  opacity: .7;
+}

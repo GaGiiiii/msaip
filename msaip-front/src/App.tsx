@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import Home from './components/Home/Home';
+import SavedCars from './components/SavedCars/SavedCars';
 
 export interface User {
   id: number,
@@ -31,9 +32,8 @@ function App() {
       <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
         <Router>
           <Routes>
-            {/* <Route path="/reports">
-              {currentUser ? <Reports reports={reports} /> : <Redirect to='/login' />}
-            </Route> */}
+            <Route path="/saved-cars" element={currentUser ? <SavedCars /> : <Navigate to='/login' />}>
+            </Route>
             <Route path="/login" element={!currentUser ? <Login /> : <Navigate to='/' />}>
             </Route>
             <Route path="/register" element={!currentUser ? <Register /> : <Navigate to='/' />}>
