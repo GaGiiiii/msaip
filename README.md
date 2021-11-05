@@ -43,9 +43,9 @@ With the commands above we have installed all the dependencies located in the co
 
 ### Database config
 
-Before we start our application we will need to create local DBs with names 'msaip' and 'msaip_test'  
-Then in 'msaip' we can import data from SQL file that is located inside 'msaip-back' directory called 'msaip.sql'  
-We don't need to insert data into testing DB.
+Before we start our application we will need to create local DBs with names 'msaip' and "msaip_test"  
+Then in "msaip" we can import data from SQL file that is located inside 'msaip-back' directory called 'msaip.sql'  
+We don't need to insert data into testing DB. Parameters for DB connection can be changed inside ".env" file located in "msaip-back" directory
 
 ### Starting backend
 
@@ -214,6 +214,8 @@ DELETE /api/saved-cars/${id}
 | :-------- | :------- | :-------------------------------- |
 | `id` | `integer` | **Required** ID of saved car intended to delete. |
 | `token` | `string` | **Required** Users token. |
+
+---
 
 ## Responses
 
