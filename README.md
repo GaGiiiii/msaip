@@ -41,6 +41,12 @@ With the commands above we have installed all the dependencies located in the co
 
 ## Starting project
 
+### Database config
+
+Before we start our application we will need to create local DBs with names 'msaip' and 'msaip_test'  
+Then in 'msaip' we can import data from SQL file that is located inside 'msaip-back' directory called 'msaip.sql'  
+We don't need to insert data into testing DB.
+
 ### Starting backend
 
 We are going to start backend from "msaip-back" directory with command:
